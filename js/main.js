@@ -8,17 +8,21 @@
     Dus puur voor de leesbaarheid van onze code.
     ==========================================================================
  */
-const SPELER1               = 0;
-const SPELER2               = 1;
-const CARD_BACK             = 0;
-const CARD_FRONT            = 1;
+const SPELER1               = 0;    // o.a. index 0 in de array ronde_scores en totaal_scores
+const SPELER2               = 1;    // o.a. index 1 in de array ronde_scores en totaal_scores
+const CARD_BACK             = 0;    // Index in de array van speelveld om aan te kunnen geven...
+const CARD_FRONT            = 1;    // ...of we de voorkant of de achterkant willen bedoelen
+
+// De 4 constante variabelen hieronder zijn alleen maar bedoeld om onze code leesbaarder te maken
+// want als we alleen maar gebruik maken van de keywords TRUE en FALSE is dat minder duidelijk.
 const OFF                   = false;
 const ON                    = true;
 const YES                   = true;
 const NO                    = false;
-const NO_CARD_CLICKED       = -1;
-const FIRST_CARD_CLICKED    = 0;
-const LAST_CARD_CLICKED     = 1;
+
+const NO_CARD_CLICKED       = -1;   // -1 kan geen index waarde zijn, daarom hebben deze waarde hier gekozen
+const FIRST_CARD_CLICKED    = 0;    // Index 0 in de array cards_clicked
+const LAST_CARD_CLICKED     = 1;    // Index 1 in de array cards_clicked
 
 /*  ==========================================================================
     VARIABELEN
@@ -27,23 +31,28 @@ const LAST_CARD_CLICKED     = 1;
     van ons programma ze alvast te vullen met een object of een waarde.
     ==========================================================================
  */
-var speelveld;                  // Element
-var game_button;                // Element
-var score_speler_1;             // Element
-var score_speler_2;             // Element
-var huidige_speler = SPELER1;   // Welke speler is aan de beurt
-var naam_speler_1;              // Element
-var naam_speler_2;              // Element
-var cards = [                   // De nummers zijn tevens de namen van de jpeg
-    1, 2, 3, 4, 5, 6, 7, 8,       // afbeeldingen (1.jpg bijvoorbeeld)
-    1, 2, 3, 4, 5, 6, 7, 8
+var speelveld;                      // Element met alle kaarten op het scherm
+                                    // Hierin zitten dus alle kaarten op het scherm
+                                    // met per kaart een voorkant en een achterkant
+var game_button;                    // Element met de button
+var score_speler_1;                 // Element met de score van speler 1 om deze te kunnen tonen
+var score_speler_2;                 // Element met de score van speler 2 om deze te kunnen tonen
+var huidige_speler = SPELER1;       // HULPVARIABELE: Welke speler is aan de beurt
+var naam_speler_1;                  // Element met de naam van speler 1 om deze te kunnen tonen
+var naam_speler_2;                  // Element met de naam van speler 2 om deze te kunnen tonen
+var cards = [                       // De nummers zijn tevens de namen van de jpeg
+    1, 2, 3, 4, 5, 6, 7, 8,         // afbeeldingen (1.jpg bijvoorbeeld)
+    1, 2, 3, 4, 5, 6, 7, 8          // Daarom zien we de nummers twee keer.
 ];
 /*
     In de onderstaande array houden we bij op welke twee kaarten geclicked is
     We kunnen deze array ook gebruiken om te controleren of het maximaal
-    aantal aan te klikken kaarten al is bereikt.
+    aantal aan te klikken kaarten al is bereikt. De waarden die we hier in
+    plaatsen zijn de index waarden van een kaart in de array cards.
+    B.v. index = 0 betekent kaart 0 in de array cards, en daarmee hebben we gelijk
+    het nummer van de afbeelding die bij deze kaart hoort.
  */
-var cards_clicked = [ NO_CARD_CLICKED, NO_CARD_CLICKED ];
+var cards_clicked = [ NO_CARD_CLICKED, NO_CARD_CLICKED ];   // Welke kaarten heeft een speler al aangeklikt?
 
 var ronde_scores = [ 0, 0 ];    // Hier houden we tijdelijk de rondescores bij
 var totaal_scores = [ 0, 0 ];   // Hier houden we de totaal scores per speler bij
@@ -83,7 +92,7 @@ window.onload = function() {
     // mee willen of moeten doen.
     // Dit zijn de elementen: speelveld, game_button, score_speler_1, score_speler2,
     // naam_speler_1 en naam_speler_2
-    // @TODO: Binnenhalen van alle benodigde pagina elementen
+    // Binnenhalen van alle benodigde pagina elementen
     game_button = document.getElementById("game-button");
     score_speler_1 = document.getElementById("score-speler-1");
     score_speler_2 = document.getElementById("score-speler-2");
@@ -93,7 +102,7 @@ window.onload = function() {
 
     // Wat coderen we hieronder?
     // Click event koppelen aan de game button
-    // @TODO: Click event koppelen aan de game button
+    // Click event koppelen aan de game button
     game_button.addEventListener("click", clickOnGameButton );
 
 }
@@ -108,7 +117,7 @@ window.onload = function() {
 function resetScores()
 {
     // Hier coderen we de code om de scores te resetten
-    // @TODO: Scores resetten
+    // Scores resetten
     ronde_scores[0] = 0;
     ronde_scores[1] = 0;
 }
@@ -146,33 +155,32 @@ function clickOnGameButton(event)
     // Hier coderen we alles wat moet worden gedaan zodra een speler op de game button clicked
     // Click event van de game button programmeren. Wat moet er allemaal gebeuren na een klik?
     if (game_button.innerHTML === 'Start') {
-        shuffleCards();
-        game_button.innerHTML = 'Reset';
-        huidige_speler = Math.round(Math.random());
-        showCurrentPlayer();
-        for (var index = 0; index < speelveld.length; index++) {
-            speelveld[index].addEventListener('click', clickOnCard);
+        shuffleCards();                                 // Kaarten schudden
+        game_button.innerHTML = 'Reset';                // Knoptekst veranderen
+        huidige_speler = Math.round(Math.random());     // Bepalen wie mag beginnen
+        showCurrentPlayer();                            // Tonen wie mag beginnen
+        for (var index = 0; index < speelveld.length; index++) {    // Met deze lus lopen we langs alle kaarten
+            speelveld[index].addEventListener('click', clickOnCard);    // Klikken mogelijk maken
         }
-
     } else {
-        game_button.innerHTML = 'Start';
-        resetScores();
-        naam_speler_1.style.color = "black";
-        naam_speler_2.style.color = "black";
+        game_button.innerHTML = 'Start';        // Knoptekst veranderen
+        resetScores();                          // Deze functie moeten we nog programmeren
+        naam_speler_1.style.color = "black";    // Kleur speler 1 herstellen naar standaard
+        naam_speler_2.style.color = "black";    // Kleur speler 2 herstellen naar standaard
 
-        // Alle open kaarten terug draaien
-        for (var index = 0; index < speelveld.length; index++) {
-            if (speelveld[index].classList.contains('flipped')) {
-                flipCard(index);
+        // Alle open kaarten terug draaien en klikken onmogelijk maken voor alle kaarten
+        for (var index = 0; index < speelveld.length; index++) {    // Met deze lus lopen we langs alle kaarten
+            if (speelveld[index].classList.contains('flipped')) {   // Is de kaart omgedraaid?
+                flipCard(index);                                    // Zo ja, dan terug draaien
             }
-            speelveld[index].removeEventListener('click', clickOnCard);
+            speelveld[index].removeEventListener('click', clickOnCard); // Stop klikken
         }
     }
     
 }
 
 /*
-    clickOnCard()
+    @TODO: clickOnCard()
     -------------
     Handel de clicks op de cards af
     In deze functie handelen we een ronde af
@@ -189,6 +197,7 @@ function clickOnCard(event)
     var rowNumber = event.target.parentElement.parentElement.parentElement.parentElement.rowIndex;
     var cardNumber = (rowNumber * 4) + cellNumber;
 
+    alert('Kaart geklikt');
     /* Wat coderen we hieronder?
         - Als de speler die aan de beurt is (huidige_speler) nog niet
         het maximaal aantal kaarten heeft aangeklikt dan:
@@ -216,15 +225,19 @@ function clickOnCard(event)
                 > de tekst op de knop terugzetten naar "Start"
                 > Klikmogelijkheid van alle kaarten uitzetten
                 > Tonen de bijgewerkte totaal score op het scherm
-        @TODO: Alles samenvoegen om het spel te laten werken
+        Alles samenvoegen om het spel te laten werken
      */
 
 
 }
 
+/*
+    Moeten we nog zelf functies maken?
+    Zoals bijvoorbeeld: toggleClickOnCard, 
+*/
 
 /*
-    endRound()
+    @TODO: endRound()
     ----------
     Einde van een ronde. Dus afhandelen wanneer een ronde ten einde is
 
@@ -232,7 +245,7 @@ function clickOnCard(event)
  */
 function endRound()
 {
-    //@TODO: Hier coderen we alles om een ronde te beëindigen
+    // Hier coderen we alles om een ronde te beëindigen
 
 }
 
@@ -258,7 +271,7 @@ function shuffleCards()
 }
 
 /*
-    determineStartingPlayer()
+    @TODO: determineStartingPlayer()
     -------------------------
     Bepaal random (willekeurig) welke van de 2 spelers mag beginnen
 
@@ -268,7 +281,7 @@ function shuffleCards()
  */
 function determineStartingPlayer()
 {
-    // @TODO: Random laten bepalen welke speler aan de beurt is of mag beginnen
+    // Random laten bepalen welke speler aan de beurt is of mag beginnen
     
 }
 
