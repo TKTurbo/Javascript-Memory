@@ -31,6 +31,10 @@ const LAST_CARD_CLICKED     = 1;    // Index 1 in de array cards_clicked
     van ons programma ze alvast te vullen met een object of een waarde.
     ==========================================================================
  */
+
+var clickedcards = ['']; //maakt array voor akaarten die zijn gelikkt
+var clickloop = 0;
+
 var speelveld;                      // Element met alle kaarten op het scherm
                                     // Hierin zitten dus alle kaarten op het scherm
                                     // met per kaart een voorkant en een achterkant
@@ -201,6 +205,28 @@ function clickOnCard(event)
     /* Wat coderen we hieronder?
         - Als de speler die aan de beurt is (huidige_speler) nog niet
         het maximaal aantal kaarten heeft aangeklikt dan:
+        */if (cards_clicked[0] != -1 && cards_clicked[1] != -1){ // kijkt of beide kaarten niet niet aangeklikt zijn, -1 is niet
+            alert('TEVEEL');
+            clickedcards = [''];
+            clickloop = 0;
+        	flipCard(cards_clicked[0]);
+            flipCard(cards_clicked[1]); // draait deze om
+        	cards_clicked[0] = -1;
+            cards_clicked[1] = -1;
+        } else {
+        	alert('yeah');
+        	flipCard(cardNumber);
+        	cards_clicked[clickloop] = cardNumber;
+        	alert('goodyeah');
+        	clickedcards.unshift(cardNumber);
+			clickloop++;
+
+			if()
+
+			if(clickloop >= 1)
+        }
+
+         /*
             - kaart die de speler heeft aangeklikt omdraaien
             - vastleggen in de array cards_clicked op welke kaart de speler
               heeft geklikt. Dit doen we door de index van de kaart in deze
@@ -246,7 +272,7 @@ function clickOnCard(event)
 function endRound()
 {
     // Hier coderen we alles om een ronde te beëindigen
-
+    //hgsdcjasdhjsaghdjashkjdashkjdhasjdgasjdjhasdhjsabdjsabdmsagdhjsagdhjashdjasgdhjsagdhjasgdhjsagdhjasdghjasgdsajdghsjadghjsagdhjasgdbas dnbsavdhsagdbnsavdhsagdbhjsabdjhsabdsajdbnjsagdhjsabdhjasdbhjsadghjasgdj
 }
 
 /*
