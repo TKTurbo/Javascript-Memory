@@ -191,8 +191,8 @@ function clickOnGameButton(event)
 
     TYPE:   Main Functie
  */
-function clickOnCard(event)
-{
+
+function clickOnCard(event) {
     // Voorbereiden van lokale variabelen
     var parentDiv = event.target.parentElement.parentElement;
     var card_back = event.target.parentElement.parentElement.children[0];
@@ -200,31 +200,37 @@ function clickOnCard(event)
     var cellNumber = event.target.parentElement.parentElement.parentElement.cellIndex;
     var rowNumber = event.target.parentElement.parentElement.parentElement.parentElement.rowIndex;
     var cardNumber = (rowNumber * 4) + cellNumber;
-
-    alert('Kaart geklikt');
+    var delay = 2000;
     /* Wat coderen we hieronder?
         - Als de speler die aan de beurt is (huidige_speler) nog niet
         het maximaal aantal kaarten heeft aangeklikt dan:
-        */if (cards_clicked[0] != -1 && cards_clicked[1] != -1){ // kijkt of beide kaarten niet niet aangeklikt zijn, -1 is niet
-            alert('TEVEEL');
+        */
+
+    // TODO: kijk als kaart is geklikt
+
+    flipCard(cardNumber);
+    cards_clicked[clickloop] = cardNumber;
+    clickedcards.unshift(cardNumber);
+    clickloop++;
+
+    setTimeout(function(){
+        if (cards_clicked[0] != -1 && cards_clicked[1] != -1) { // kijkt of beide kaarten niet niet aangeklikt zijn, -1 is niet
             clickedcards = [''];
             clickloop = 0;
-        	flipCard(cards_clicked[0]);
+            flipCard(cards_clicked[0]);
             flipCard(cards_clicked[1]); // draait deze om
-        	cards_clicked[0] = -1;
+            cards_clicked[0] = -1;
             cards_clicked[1] = -1;
-        } else {
-        	alert('yeah');
-        	flipCard(cardNumber);
-        	cards_clicked[clickloop] = cardNumber;
-        	alert('goodyeah');
-        	clickedcards.unshift(cardNumber);
-			clickloop++;
 
-			if()
+            if (huidige_speler === 0) {
+                huidige_speler = 1;
+            } else if (huidige_speler === 1) {
+                huidige_speler = 0;
+            }
 
-			if(clickloop >= 1)
+            showCurrentPlayer();
         }
+    }, delay);
 
          /*
             - kaart die de speler heeft aangeklikt omdraaien
