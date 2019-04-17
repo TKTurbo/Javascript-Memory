@@ -192,6 +192,18 @@ function clickOnGameButton(event)
     TYPE:   Main Functie
  */
 
+function disableClick(){
+    for (var index = 0; index < speelveld.length; index++) {    // Met deze lus lopen we langs alle kaarten
+        speelveld[index].removeEventListener('click', clickOnCard); // Stop klikken
+    }
+}
+
+function enableClick(){
+    for (var index = 0; index < speelveld.length; index++) {    // Met deze lus lopen we langs alle kaarten
+        speelveld[index].addEventListener('click', clickOnCard); // Stop klikken
+    }
+}
+
 function clickOnCard(event) {
     // Voorbereiden van lokale variabelen
     var parentDiv = event.target.parentElement.parentElement;
@@ -213,24 +225,27 @@ function clickOnCard(event) {
     clickedcards.unshift(cardNumber);
     clickloop++;
 
-    setTimeout(function(){
+
         if (cards_clicked[0] != -1 && cards_clicked[1] != -1) { // kijkt of beide kaarten niet niet aangeklikt zijn, -1 is niet
-            clickedcards = [''];
-            clickloop = 0;
-            flipCard(cards_clicked[0]);
-            flipCard(cards_clicked[1]); // draait deze om
-            cards_clicked[0] = -1;
-            cards_clicked[1] = -1;
+            disableClick(); // zet klikken uit
+            setTimeout(function(){ // 1000 ms delay
+                clickedcards = [''];
+                clickloop = 0;
+                flipCard(cards_clicked[0]);
+                flipCard(cards_clicked[1]); // draait deze om
+                cards_clicked[0] = -1;
+                cards_clicked[1] = -1;
 
-            if (huidige_speler === 0) {
-                huidige_speler = 1;
-            } else if (huidige_speler === 1) {
-                huidige_speler = 0;
+                if (huidige_speler === 0) {
+                    huidige_speler = 1;
+                } else if (huidige_speler === 1) {
+                    huidige_speler = 0;
+                }
+
+                    showCurrentPlayer();
+                enableClick(); // zet klik aan
+                }, delay);
             }
-
-            showCurrentPlayer();
-        }
-    }, delay);
 
          /*
             - kaart die de speler heeft aangeklikt omdraaien
