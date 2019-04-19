@@ -39,8 +39,8 @@ var speelveld;                      // Element met alle kaarten op het scherm
                                     // Hierin zitten dus alle kaarten op het scherm
                                     // met per kaart een voorkant en een achterkant
 var game_button;                    // Element met de button
-var score_speler_1;                 // Element met de score van speler 1 om deze te kunnen tonen
-var score_speler_2;                 // Element met de score van speler 2 om deze te kunnen tonen
+var score_speler_1 = 0;                 // Element met de score van speler 1 om deze te kunnen tonen
+var score_speler_2 = 0;                 // Element met de score van speler 2 om deze te kunnen tonen
 var huidige_speler = SPELER1;       // HULPVARIABELE: Welke speler is aan de beurt
 var naam_speler_1;                  // Element met de naam van speler 1 om deze te kunnen tonen
 var naam_speler_2;                  // Element met de naam van speler 2 om deze te kunnen tonen
@@ -124,6 +124,8 @@ function resetScores()
     // Scores resetten
     ronde_scores[0] = 0;
     ronde_scores[1] = 0;
+
+    updateScores();
 }
 
 /*
@@ -193,14 +195,38 @@ function clickOnGameButton(event)
  */
 
 function disableClick(){
-    for (var index = 0; index < speelveld.length; index++) {    // Met deze lus lopen we langs alle kaarten
-        speelveld[index].removeEventListener('click', clickOnCard); // Stop klikken
+    for (var index = 0; index < cards.length; index++) {    // Met deze lus lopen we langs alle kaarten
+        if(cards[index] === -1){
+        }else {
+            speelveld[index].removeEventListener('click', clickOnCard); // Stop klikken
+        }
     }
 }
 
-function enableClick(){
-    for (var index = 0; index < speelveld.length; index++) {    // Met deze lus lopen we langs alle kaarten
-        speelveld[index].addEventListener('click', clickOnCard); // Stop klikken
+function enableClick() {
+    for (var index = 0; index < cards.length; index++) {    // Met deze lus lopen we langs alle kaarten
+        if (cards[index] === -1) {
+        } else {
+            speelveld[index].addEventListener('click', clickOnCard); // Stop klikken
+        }
+    }
+}
+
+function pairDisable(){
+        speelveld[-1].removeEventListener('click', clickOnCard); // Stop klikken
+}
+
+function updateScores(){
+        score_speler_1.innerHTML = ronde_scores[0];
+        score_speler_2.innerHTML = ronde_scores[1];
+}
+
+function checkEnd(){
+    for(i=0; i<cards.length -1; i++){
+        if (cards[i] != cards[i+1]){
+            isEqual = false;
+        }
+        alert("All elements are equal is " + isEqual);
     }
 }
 
@@ -229,18 +255,27 @@ function clickOnCard(event) {
         if (cards_clicked[0] != -1 && cards_clicked[1] != -1) { // kijkt of beide kaarten niet niet aangeklikt zijn, -1 is niet
             disableClick(); // zet klikken uit
             setTimeout(function(){ // 1000 ms delay
-                clickedcards = [''];
-                clickloop = 0;
-                flipCard(cards_clicked[0]);
-                flipCard(cards_clicked[1]); // draait deze om
-                cards_clicked[0] = -1;
-                cards_clicked[1] = -1;
 
-                if (huidige_speler === 0) {
+                if(cards[cards_clicked[0]] === cards[cards_clicked[1]]){
+                    ronde_scores[huidige_speler]++;
+                    updateScores();
+                    cards[cards_clicked[0]] = -1; // -1 zodat de loop de kaart niet clickable kaan maken
+                    cards[cards_clicked[1]] = -1;
+                }else{
+                    flipCard(cards_clicked[0]);
+                    flipCard(cards_clicked[1]); // draait deze om
+                }
+
+                if (huidige_speler === 0){
                     huidige_speler = 1;
-                } else if (huidige_speler === 1) {
+                } else if (huidige_speler === 1){
                     huidige_speler = 0;
                 }
+
+                clickedcards = [];
+                clickloop = 0;
+                cards_clicked[0] = -1;
+                cards_clicked[1] = -1;
 
                     showCurrentPlayer();
                 enableClick(); // zet klik aan
