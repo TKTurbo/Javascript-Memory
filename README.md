@@ -1,2 +1,4 @@
 # Memory Opdracht Javascript
-Fork van het begin.
+Snackbar Memory - Test je geheugen met oerhollandse snacks!
+
+Opdracht javascript na meivakantie.
